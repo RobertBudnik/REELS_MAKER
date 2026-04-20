@@ -1,4 +1,4 @@
-# 🎬 REELS_MAKER
+# 🎬 REELS_MAKER (during coding)
 
 Zaawansowany system automatycznego generowania, edytowania i publikowania krótkich filmów (Reels/Shorts) na YouTube z użyciem AI, transkrypcji i profesjonalnych napisów.
 
