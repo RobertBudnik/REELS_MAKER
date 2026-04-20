@@ -18,7 +18,7 @@ from google.api_core.exceptions import ResourceExhausted
 # 1. KONFIGURACJA I KLUCZE API
 # ==========================================
 # UWAGA: Klucz wklejony na Twoje życzenie. Uważaj, żeby nie udostępnić tego pliku w sieci!
-GEMINI_API_KEY = "AIzaSyB85-IRU6O90Kbmb_kBLNn83yedBT2lZ9E"
+GEMINI_API_KEY = "API-Z-GEMINI"
 
 genai.configure(api_key=GEMINI_API_KEY)
 
