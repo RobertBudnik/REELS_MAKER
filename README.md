@@ -96,7 +96,7 @@ Pobierz [Fredoka One Regular](https://www.google.com/search?q=https://fonts.goog
 
 -----
 
-## ⚙️ Konfiguracja
+# ⚙️ Konfiguracja
 
 ### 1\. Konfiguracja Google Gemini API (generowanie historii)
 
@@ -150,7 +150,7 @@ KATEGORIA = '22'  # 22 = Film i animacja
 
 -----
 
-## 📖 Użytkowanie
+# 📖 Użytkowanie
 
 **Scenariusz 1: Pełny workflow (od A do Z)**
 
@@ -187,7 +187,7 @@ python youtube_bot_final.py
 
 -----
 
-## 🔧 Komponenty
+# 🔧 Komponenty
 
 ### 1\. `main.py` - Silnik generowania wideo
 
@@ -219,26 +219,6 @@ python youtube_bot_final.py
 
 -----
 
-# 🐛 Rozwiązywanie problemów
-
-  * **`ImportError: No module named 'googleapiclient'`**
-    Zainstaluj brakujące pakiety: `pip install google-api-python-client google-auth-oauthlib google-auth-httplib2`
-  * **`FileNotFoundError: client_secret.json`**
-    Pobierz plik OAuth2 z Google Cloud Console i umieść go w głównym folderze.
-  * **Błąd 429 API Gemini (ResourceExhausted)**
-    Poczekaj 20-30 sekund. Skrypt wznawia działanie automatycznie.
-  * **ImageMagick nie znaleziony (Windows)**
-    Zainstaluj ImageMagick z zaznaczoną opcją PATH lub podaj ścieżkę w `subtitles.py`:
-    `IMAGEMAGICK_PATH = r"C:\Program Files\ImageMagick-7.1.2-Q16-HDRI\magick.exe"`
-  * **Brak dźwięku w wideo**
-    Upewnij się, że masz zainstalowany `ffmpeg`.
-  * **Whisper pobiera się długo**
-    To normalne przy pierwszym uruchomieniu (pobieranie modelu AI \~500 MB).
-
------
-
-
-
 # 📊 Performance (Szacunki)
 
 | Operacja | Średni Czas |
@@ -254,14 +234,6 @@ python youtube_bot_final.py
 
 -----
 
-# 🤝 Contributing & Support
-
-Jeśli chcesz ulepszyć projekt, stwórz Forka i wyślij Pull Request.
-Jeśli projekt Ci się podoba, zostaw ⭐ na repozytorium\!
-Problemy? Otwórz Issue.
-
-👤 **Autor**: Robert Budnik - [@RobertBudnik](https://www.google.com/search?q=https://github.com/RobertBudnik)
-📝 **Licencja**: MIT
 
 # 🎯 Roadmap
 
@@ -275,5 +247,5 @@ Problemy? Otwórz Issue.
 
 <!-- end list -->
 
-```
+
 ```
