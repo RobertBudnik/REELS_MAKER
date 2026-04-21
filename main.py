@@ -1,9 +1,6 @@
 import PIL.Image
-
-# Łatka na Pillow dla nowszych wersji Pythona (MoviePy 1.0.3)
 if not hasattr(PIL.Image, 'ANTIALIAS'):
     PIL.Image.ANTIALIAS = PIL.Image.LANCZOS
-
 import os
 import time
 import random
@@ -11,14 +8,30 @@ import asyncio
 import edge_tts
 from moviepy.editor import VideoFileClip, AudioFileClip
 import yt_dlp
+from dotenv import load_dotenv
 import google.generativeai as genai
 from google.api_core.exceptions import ResourceExhausted
+
+
+def pobierz_automatycznie_model():
+    print("🔍 Szukam najnowszego dostępnego modelu w API...")
+
+    # Przeszukujemy wszystkie modele przypisane do Twojego klucza
+    for model in genai.list_models():
+        # Szukamy modelu, który obsługuje tekst i jest z szybkiej/taniej rodziny "flash"
+        if 'generateContent' in model.supported_generation_methods and 'flash' in model.name:
+            print(f"✅ Wybrano automatycznie model: {model.name}")
+            # Zwraca gotową nazwę, np. 'models/gemini-1.5-flash-002'
+            return model.name
+
+    print("⚠️ Nie udało się przefiltrować modeli, używam domyślnego.")
+    return 'gemini-1.5-flash-latest'
 
 # ==========================================
 # 1. KONFIGURACJA I KLUCZE API
 # ==========================================
 # UWAGA: Klucz wklejony na Twoje życzenie. Uważaj, żeby nie udostępnić tego pliku w sieci!
-GEMINI_API_KEY = "API-Z-GEMINI"
+GEMINI_API_KEY = "AIzaSyCLQgYx_ww8rzSftCYEEMUwU5cTHjIRS7A"
 
 genai.configure(api_key=GEMINI_API_KEY)
 
@@ -58,8 +71,12 @@ async def wygeneruj_historie_ai(konfiguracja):
 
     prompt_finalny = konfiguracja["prompt"].format(temat=temat)
 
-    # Używamy najstabilniejszego modelu do tych zadań
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    # ----------------------------------------------------
+    # TUTAJ JEST ZMIANA: Model sam się znajduje i wpisuje
+    # ----------------------------------------------------
+    nazwa_modelu = pobierz_automatycznie_model()
+    model = genai.GenerativeModel(nazwa_modelu)
+    # ----------------------------------------------------
 
     for proba in range(3):
         try:
@@ -67,7 +84,7 @@ async def wygeneruj_historie_ai(konfiguracja):
             return response.text.strip()
         except ResourceExhausted:
             print(f"⏳ Błąd 429: API przeciążone. Czekam 20 sekund przed kolejną próbą ({proba + 1}/3)...")
-            await asyncio.sleep(20)
+            await asyncio.sleep(60)
         except Exception as e:
             print(f"⚠️ Nieoczekiwany błąd API: {e}. Próbuję ponownie...")
             await asyncio.sleep(5)
@@ -158,7 +175,6 @@ async def stworz_shorta(konfig_jezyka):
     except Exception as e:
         print(f"❌ Wystąpił błąd podczas montażu wideo: {e}")
     finally:
-        # BEZPIECZNE SPRZĄTANIE PAMIĘCI (zapobiega blokowaniu plików)
         print("🧹 Sprzątanie plików z pamięci...")
         if audio_clip: audio_clip.close()
         if bg_wideo: bg_wideo.close()
