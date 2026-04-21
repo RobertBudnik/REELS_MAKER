@@ -2,7 +2,6 @@ import os
 import whisper
 import warnings
 
-# Konfiguracja ImageMagick (tylko Windows)
 if os.name == 'nt':
     IMAGEMAGICK_PATH = r"C:\Program Files\ImageMagick-7.1.2-Q16-HDRI\magick.exe"
     if not os.path.exists(IMAGEMAGICK_PATH):
@@ -18,7 +17,6 @@ if os.name == 'nt':
                 break
         else:
             print("⚠️ UWAGA: Nie znaleziono ImageMagick! TextClip może nie działać.")
-            print("Pobierz ze: https://imagemagick.org/script/download.php#windows")
 
     os.environ["IMAGEMAGICK_BINARY"] = IMAGEMAGICK_PATH
 
@@ -33,7 +31,6 @@ warnings.filterwarnings("ignore")
 def stworz_text_clip(text, font_file, font_size, color, stroke_color=None, stroke_width=0, video_width=None):
     """Tworzy instancję TextClip z bezpieczną obsługą starego i nowego API MoviePy"""
     try:
-        # Pół-nowe / stare API
         clip = TextClip(
             txt=text,
             fontsize=font_size,
@@ -46,7 +43,6 @@ def stworz_text_clip(text, font_file, font_size, color, stroke_color=None, strok
             stroke_width=stroke_width if stroke_width > 0 else 0
         )
     except Exception:
-        # Fallback do nowszego API
         clip = TextClip(
             text=text,
             font_size=font_size,
@@ -138,10 +134,8 @@ def add_viral_subtitles(video_path, output_path, model):
     except Exception as e:
         print(f"❌ Błąd podczas przetwarzania {video_path}: {e}")
     finally:
-        # Zamykanie zasobów
         if video: video.close()
         if final_video: final_video.close()
-        # Zamykanie klipów z napisami, jeśli to możliwe
         try:
             for clip in subtitle_clips: clip.close()
         except:
