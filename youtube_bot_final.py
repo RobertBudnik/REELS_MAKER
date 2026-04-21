@@ -6,7 +6,6 @@ import time
 from datetime import timedelta, timezone
 from zoneinfo import ZoneInfo
 
-# Sprawdzenie czy biblioteki są zainstalowane
 try:
     from googleapiclient.discovery import build
     from googleapiclient.http import MediaFileUpload
@@ -21,7 +20,7 @@ except ImportError:
     sys.exit()
 
 # --- KONFIGURACJA ---
-FOLDER_ZRODLOWY = "do_publikacji"
+FOLDER_ZRODLOWY = "filmy"
 FOLDER_ZAKONCZONY = "opublikowane"
 PLIK_KLUCZA = "client_secret.json"
 STREFA_PL = ZoneInfo("Europe/Warsaw")
