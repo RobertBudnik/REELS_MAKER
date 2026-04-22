@@ -21,7 +21,6 @@ def pobierz_automatycznie_model():
         # Szukamy modelu, który obsługuje tekst i jest z szybkiej/taniej rodziny "flash"
         if 'generateContent' in model.supported_generation_methods and 'flash' in model.name:
             print(f"✅ Wybrano automatycznie model: {model.name}")
-            # Zwraca gotową nazwę, np. 'models/gemini-1.5-flash-002'
             return model.name
 
     print("⚠️ Nie udało się przefiltrować modeli, używam domyślnego.")
