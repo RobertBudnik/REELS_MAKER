@@ -31,7 +31,7 @@ def pobierz_automatycznie_model():
 # 1. KONFIGURACJA I KLUCZE API
 # ==========================================
 # UWAGA: Klucz wklejony na Twoje życzenie. Uważaj, żeby nie udostępnić tego pliku w sieci!
-GEMINI_API_KEY = "AIzaSyCLQgYx_ww8rzSftCYEEMUwU5cTHjIRS7A"
+GEMINI_API_KEY = ""
 
 genai.configure(api_key=GEMINI_API_KEY)
 
