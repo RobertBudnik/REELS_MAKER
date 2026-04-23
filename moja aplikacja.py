@@ -4,7 +4,6 @@ import os
 import subprocess
 import sys
 
-# Próba importu VLC
 try:
     import vlc
 except ImportError:
@@ -15,20 +14,16 @@ except ImportError:
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
-        # Powiększamy okno, żeby zmieścić i listę, i wbudowany odtwarzacz
         self.geometry("1000x700")
         self.title("Zarządca Filmów - Robert")
 
-        # Inicjalizacja instancji VLC
         self.vlc_instance = vlc.Instance() if vlc else None
         self.player = self.vlc_instance.media_player_new() if self.vlc_instance else None
 
-        # GŁÓWNY UKŁAD: Po lewej zakładki (listy filmów), po prawej odtwarzacz
-        self.grid_columnconfigure(0, weight=1)  # Lewa kolumna (zakładki)
-        self.grid_columnconfigure(1, weight=2)  # Prawa kolumna (odtwarzacz - szersza)
+        self.grid_columnconfigure(0, weight=1)  
+        self.grid_columnconfigure(1, weight=2) 
         self.grid_rowconfigure(0, weight=1)
 
-        # --- LEWA STRONA: ZAKŁADKI ---
         self.tabview = ctk.CTkTabview(self)
         self.tabview.grid(row=0, column=0, padx=(20, 10), pady=20, sticky="nsew")
 
@@ -36,7 +31,6 @@ class App(ctk.CTk):
         self.tabview.add("subtitles.py")
         self.tabview.add("youtube_bot_final.py")
 
-        # Budujemy zakładki (używając funkcji pomocniczej, żeby nie kopiować kodu)
         self.lista_frame1 = self.zbuduj_zakladke(
             "main.py",
             r"C:\Users\Robert\PycharmProjects\PythonProject2\gotowe_filmy"
@@ -50,21 +44,17 @@ class App(ctk.CTk):
             r"C:\Users\Robert\PycharmProjects\PythonProject2\opublikowane"
         )
 
-        # --- PRAWA STRONA: WBUDOWANY ODTWARZACZ ---
         self.player_frame = ctk.CTkFrame(self)
         self.player_frame.grid(row=0, column=1, padx=(10, 20), pady=20, sticky="nsew")
         self.player_frame.grid_rowconfigure(0, weight=1)
         self.player_frame.grid_columnconfigure(0, weight=1)
 
-        # Ekran wideo (czarne tło)
         self.video_screen = ctk.CTkFrame(self.player_frame, fg_color="black")
         self.video_screen.grid(row=0, column=0, padx=10, pady=(10, 5), sticky="nsew")
 
-        # Panel przycisków odtwarzacza
         self.controls_frame = ctk.CTkFrame(self.player_frame, height=50)
         self.controls_frame.grid(row=1, column=0, padx=10, pady=(5, 10), sticky="ew")
 
-        # Tytuł aktualnie odtwarzanego filmu
         self.lbl_tytul = ctk.CTkLabel(self.controls_frame, text="Brak odtwarzanego pliku", text_color="gray")
         self.lbl_tytul.pack(side="top", pady=(5, 0))
 
@@ -147,7 +137,6 @@ class App(ctk.CTk):
             )
             btn.pack(fill="x", padx=5, pady=2)
 
-    # --- FUNKCJE ODTWARZACZA ---
     def odtworz_film_w_aplikacji(self, sciezka_pliku):
         if self.player is None:
             print("Brak VLC! Otwieram domyślnie...")
@@ -156,24 +145,19 @@ class App(ctk.CTk):
 
         print(f"Odtwarzam: {sciezka_pliku}")
 
-        # Aktualizacja interfejsu (tytuł i przyciski)
         nazwa_filmu = os.path.basename(sciezka_pliku)
         self.lbl_tytul.configure(text=f"Teraz odtwarzane: {nazwa_filmu}", text_color="white")
         self.btn_play.configure(state="normal", text="⏸ Pause")
         self.btn_stop.configure(state="normal")
 
-        # Zatrzymanie poprzedniego filmu (jeśli jakiś grał)
         self.player.stop()
 
-        # Załadowanie nowego filmu do VLC
         media = self.vlc_instance.media_new(sciezka_pliku)
         self.player.set_media(media)
 
-        # Powiązanie odtwarzacza VLC z naszą czarną ramką (Tylko Windows)
         if sys.platform.startswith('win'):
             self.player.set_hwnd(self.video_screen.winfo_id())
 
-        # Start odtwarzania
         self.player.play()
 
     def toggle_play(self):
@@ -194,7 +178,6 @@ class App(ctk.CTk):
         self.btn_play.configure(state="disabled", text="▶ Play")
         self.btn_stop.configure(state="disabled")
 
-    # Gdy zamykamy główną aplikację, musimy zatrzymać odtwarzacz
     def destroy(self):
         if self.player:
             self.player.stop()
