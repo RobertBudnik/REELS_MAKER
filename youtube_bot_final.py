@@ -13,10 +13,11 @@ try:
     from google_auth_oauthlib.flow import InstalledAppFlow
     from google.auth.transport.requests import Request
     from google.oauth2.credentials import Credentials
-except ImportError:
-    print("Brakuje bibliotek! Instaluję je dla Ciebie...")
-    os.system(f"{sys.executable} -m pip install google-api-python-client google-auth-oauthlib google-auth-httplib2")
-    print("\nBiblioteki zainstalowane. Uruchom skrypt ponownie.")
+except ImportError as e:
+    print("Brakuje bibliotek wymaganych do uploadu.")
+    print(f"Szczegoly: {e}")
+    print(f"Uruchom: {sys.executable} -m pip install -r requirements.txt")
+    print("\nPo instalacji uruchom skrypt ponownie.")
     sys.exit()
 
 # --- KONFIGURACJA ---
@@ -36,11 +37,11 @@ def przygotuj_srodowisko():
 
     if not os.path.exists(PLIK_KLUCZA):
         print("\n" + "!" * 50)
-        print(f"BŁĄD: Brak pliku '{PLIK_KLUCZA}'!")
-        print("1. Wejdź na https://console.cloud.google.com/")
-        print("2. Utwórz projekt → API i usługi → Dane uwierzytelniające")
-        print("3. Utwórz 'Identyfikator klienta OAuth 2.0' (Aplikacja na komputer)")
-        print("4. Pobierz plik JSON i umieść go tutaj jako 'client_secret.json'")
+        print(f"BĹÄ„D: Brak pliku '{PLIK_KLUCZA}'!")
+        print("1. WejdĹş na https://console.cloud.google.com/")
+        print("2. UtwĂłrz projekt â†’ API i usĹ‚ugi â†’ Dane uwierzytelniajÄ…ce")
+        print("3. UtwĂłrz 'Identyfikator klienta OAuth 2.0' (Aplikacja na komputer)")
+        print("4. Pobierz plik JSON i umieĹ›Ä‡ go tutaj jako 'client_secret.json'")
         print("!" * 50)
         sys.exit()
 
@@ -55,7 +56,7 @@ def authenticate_youtube():
             try:
                 creds.refresh(Request())
             except Exception as e:
-                print(f"⚠️ Nie udało się odświeżyć tokenu ({e}). Loguję ponownie...")
+                print(f"âš ď¸Ź Nie udaĹ‚o siÄ™ odĹ›wieĹĽyÄ‡ tokenu ({e}). LogujÄ™ ponownie...")
                 creds = None
 
         if not creds:
@@ -97,7 +98,7 @@ def upload_film(youtube, sciezka_pliku, tytul, data_utc):
     body = {
         'snippet': {
             'title': tytul,
-            'description': '🔴 Zostaw komentarz co sądzisz!\n\n#shorts #horror #creepypasta',
+            'description': 'đź”´ Zostaw komentarz co sÄ…dzisz!\n\n#shorts #horror #creepypasta',
             'categoryId': '22',
             'tags': ['shorts', 'horror', 'creepypasta', 'polska'],
         },
@@ -123,30 +124,30 @@ def upload_film(youtube, sciezka_pliku, tytul, data_utc):
             if status:
                 procent = int(status.progress() * 100)
                 if procent != ostatni_procent:
-                    print(f"  📤 Przesyłanie: {procent}%", end='\r')
+                    print(f"  đź“¤ PrzesyĹ‚anie: {procent}%", end='\r')
                     ostatni_procent = procent
         except HttpError as e:
             if e.resp.status in [500, 502, 503, 504]:
-                print(f"\n  ⚠️ Błąd serwera {e.resp.status}, ponawiam za 5 sekund...")
+                print(f"\n  âš ď¸Ź BĹ‚Ä…d serwera {e.resp.status}, ponawiam za 5 sekund...")
                 time.sleep(5)
             else:
                 raise
 
-    print(f"\n  ✅ Upload zakończony! Video ID: {response.get('id', 'nieznany')}")
+    print(f"\n  âś… Upload zakoĹ„czony! Video ID: {response.get('id', 'nieznany')}")
     return response
 
 
 def bezpieczne_przeniesienie(src, dst, max_prob=3):
-    """Przenosi plik próbując kilkukrotnie, jeśli jest zablokowany przez system."""
+    """Przenosi plik prĂłbujÄ…c kilkukrotnie, jeĹ›li jest zablokowany przez system."""
     for proba in range(max_prob):
         try:
             shutil.move(src, dst)
             return True
         except PermissionError:
-            print(f"  ⚠️ Plik zajęty przez system. Próba {proba + 1}/{max_prob} za 2 sekundy...")
+            print(f"  âš ď¸Ź Plik zajÄ™ty przez system. PrĂłba {proba + 1}/{max_prob} za 2 sekundy...")
             time.sleep(2)
         except Exception as e:
-            print(f"  ❌ Nie udało się przenieść pliku: {e}")
+            print(f"  âťŚ Nie udaĹ‚o siÄ™ przenieĹ›Ä‡ pliku: {e}")
             break
     return False
 
@@ -157,12 +158,12 @@ def main():
     pliki = sorted([f for f in os.listdir(FOLDER_ZRODLOWY) if f.lower().endswith(('.mp4', '.mov', '.avi'))])
 
     if not pliki:
-        print(f"\n📂 Folder '{FOLDER_ZRODLOWY}' jest pusty.")
-        print("Wrzuć tam filmy i uruchom skrypt ponownie.")
+        print(f"\nđź“‚ Folder '{FOLDER_ZRODLOWY}' jest pusty.")
+        print("WrzuÄ‡ tam filmy i uruchom skrypt ponownie.")
         return
 
-    print(f"✅ Znaleziono {len(pliki)} filmów.")
-    print("🔑 Łączę z YouTube...")
+    print(f"âś… Znaleziono {len(pliki)} filmĂłw.")
+    print("đź”‘ ĹÄ…czÄ™ z YouTube...")
 
     youtube = authenticate_youtube()
     harmonogram = generuj_harmonogram(len(pliki))
@@ -175,8 +176,8 @@ def main():
         tytul = os.path.splitext(nazwa_pliku)[0]
         data_utc, data_lokalna = harmonogram[i]
 
-        print(f"\n[{i + 1}/{len(pliki)}] 📹 {tytul}")
-        print(f"  🕐 Zaplanowane na: {data_lokalna}")
+        print(f"\n[{i + 1}/{len(pliki)}] đź“ą {tytul}")
+        print(f"  đź• Zaplanowane na: {data_lokalna}")
 
         try:
             upload_film(youtube, sciezka_pliku, tytul, data_utc)
@@ -189,14 +190,14 @@ def main():
                 blad += 1
 
         except HttpError as e:
-            print(f"\n  ❌ Błąd HTTP {e.resp.status}: {e.content}")
+            print(f"\n  âťŚ BĹ‚Ä…d HTTP {e.resp.status}: {e.content}")
             blad += 1
         except Exception as e:
-            print(f"\n  ❌ Nieoczekiwany błąd: {e}")
+            print(f"\n  âťŚ Nieoczekiwany bĹ‚Ä…d: {e}")
             blad += 1
 
     print(f"\n{'=' * 40}")
-    print(f"🏁 Zakończono! ✅ Sukces: {sukces} | ❌ Błędy: {blad}")
+    print(f"đźŹ ZakoĹ„czono! âś… Sukces: {sukces} | âťŚ BĹ‚Ä™dy: {blad}")
     print(f"{'=' * 40}")
 
 
