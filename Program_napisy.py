@@ -1,16 +1,4 @@
-"""
-program_napisy.py  –  Automatyczny procesor napisow
-====================================================
-Dzialanie:
-  1. Skanuje folder  filmy/          (filmy do obrobki)
-  2. Dla kazdego wideo:
-       a) generuje tekst narracji przez Gemini AI
-       b) tworzy audio TTS z edge_tts (z timingiami slow)
-       c) naklada zsynchronizowane napisy na wideo
-       d) gotowy plik przenosi do  filmy/  (folder 'do uploadu')
-       e) oryginalne wideo usuwa z folderu wejsciowego
-  3. Moze dzialac w petli (tryb Watch) lub jednorazowo
-"""
+
 
 import PIL.Image
 if not hasattr(PIL.Image, "ANTIALIAS"):
